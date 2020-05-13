@@ -9,6 +9,8 @@ import numpy as np
 import sys
 import os
 
+dir = ""
+
 def write_to_file(account_df):
   fname = get_df_name(account_df).split('_')[0]
   fil = open(dir+fname + ".txt",'w')
@@ -45,12 +47,12 @@ def get_df_name(df):
 
 
 if(len(sys.argv) < 2):
-	print("Enter total rows and directory name as command line argument, exiting")
+  print("Enter total rows and directory name as command line argument, exiting")
   sys.exit()	
 row_size = int(sys.argv[1])
 
-if(len(argv)==3):
-	dir = argv[2] + "/"
+if(len(sys.argv)==3):
+	dir = sys.argv[2] + "/"
 
 column_names = {}    
 column_names["account_df"] = ["account_id","account_district_id","statement_freq","date"] 
@@ -77,7 +79,10 @@ order_df = order_df.astype({"order_amount":float})
 trans_df = trans_df.astype({"trans_amount":float, "balance_after_trans":float,"trans_account_partner":float})
 
 if(dir != ""):
-	os.mkdir(dir,0o666)
+	try:
+		os.mkdir(dir,0o777)
+	except:
+		print("Directory already exist, overwriting files")
 write_to_file(card_df)
 write_to_file(client_df)
 write_to_file(account_df)
