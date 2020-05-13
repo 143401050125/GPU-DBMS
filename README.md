@@ -160,6 +160,8 @@ This program implements a subset of SQL's Data Query Language. Data Definition a
 ## How it works
 The program is implemented in CUDA C++. For parsing the input we have used Lex and Yacc. After reading a query from the user we build an expression tree using yacc. The expression tree is then evaluated. Data is loaded into memory from disk and then passed to GPU to perform the required operation in parallel. We have used Thrust Library to perform some operations. The processed data is then moved back to main memory and printed using the CPU.
 
+The project mainly focuses on optimizing the operations(like sorting, reducing ) in parallel using GPU and not on the data retrieval part, though the current schema is choosen to give significant speed up in data retrieval from disk.
+
 ## Future Work
 String and blob may also be supported later alongwith group by clause. The scope of the project could be fully realised if Data manipulation and Data definition are also supported. 
 
