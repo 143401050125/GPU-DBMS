@@ -29,7 +29,7 @@ The file contains two parts
 * metadata
 * data
 
-The metadata is of the fixed size of 1000 bytes and is at the begining of the file. It is of the format
+The metadata id of a fixed size and is at the begining of the file. It is of the format
 Number_of_Rows Number_of_Columns Column1_Name Data_Type starting_position Column2_Name Data_Type starting_position .... 
 The starting position is the number of bytes from the begining where the column starts in the file
 For each column the elements within a column are space separated and consecutive columns are newline separated
@@ -161,5 +161,7 @@ This program implements a subset of SQL's Data Query Language. Data Definition a
 The program is implemented in CUDA C++. For parsing the input we have used Lex and Yacc. After reading a query from the user we build an expression tree using yacc. The expression tree is then evaluated. Data is loaded into memory from disk and then passed to GPU to perform the required operation in parallel. We have used Thrust Library to perform some operations. The processed data is then moved back to main memory and printed using the CPU.
 
 ## Future Work
-Join operation on very large tables . String and blob may also be supported later alongwith group by clause. The scope of the project could be fully realised if Data manipulation and Data definition is also supported. 
+String and blob may also be supported later alongwith group by clause. The scope of the project could be fully realised if Data manipulation and Data definition are also supported. 
 
+## Authors
+Adarsh Singh and Rishabh Thakur
