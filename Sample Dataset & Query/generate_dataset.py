@@ -1,6 +1,6 @@
 '''
 RUN as $python3 generate_dataset.py n, where n is the number of rows  
-This code will generate a database with tables card,account,loan,order,trans,disp,district,client
+This code will generate a database with tables card,account,loan,order,trans,disp,district,client and write these in table_name.txt
 The column names of each of the table is present as a list from line 50 below
 The values are randomly generated
 '''
