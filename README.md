@@ -157,6 +157,13 @@ This program implements a subset of SQL's Data Query Language. Data Definition a
 
 >|	aggregate ( some select query )
 
+## Test on Sample Data
+```bash
+$ make
+$ python3 generate_dataset.py 500
+$ ./a.out < Query
+```
+
 ## How it works
 The program is implemented in CUDA C++. For parsing the input we have used Lex and Yacc. After reading a query from the user we build an expression tree using yacc. The expression tree is then evaluated. Data is loaded into memory from disk and then passed to GPU to perform the required operation in parallel. We have used Thrust Library to perform some operations. The processed data is then moved back to main memory and printed using the CPU.
 
