@@ -160,7 +160,7 @@ This program implements a subset of SQL's Data Query Language. Data Definition a
 ## Test on Sample Data
 ```bash
 $ make
-$ python3 generate_dataset.py 500
+$ python3 generate_dataset.py 500 sample
 $ ./a.out < Query
 ```
 
