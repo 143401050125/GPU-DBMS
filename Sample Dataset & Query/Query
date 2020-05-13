@@ -1,3 +1,4 @@
+use sample;
 select account_id, statement_freq from account where (account_id > 1000) and (statement_freq == 1);
 select date as yymmdd from account;
 select avg(account_district_id) from account;
