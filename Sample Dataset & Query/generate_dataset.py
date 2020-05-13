@@ -1,5 +1,5 @@
 '''
-RUN as $python3 generate_dataset.py n, where n is the number of rows  
+RUN as $python3 generate_dataset.py n directory_name, where n is the number of rows and directory_name is optional  
 This code will generate a database with tables card,account,loan,order,trans,disp,district,client and write these in table_name.txt
 The column names of each of the table is present as a list from line 50 below
 The values are randomly generated
@@ -7,10 +7,11 @@ The values are randomly generated
 import pandas as pd
 import numpy as np
 import sys
+import os
 
 def write_to_file(account_df):
   fname = get_df_name(account_df).split('_')[0]
-  fil = open(fname + ".txt",'w')
+  fil = open(dir+fname + ".txt",'w')
   row = account_df.shape[0]
   col = account_df.shape[1]
   mp = account_df.dtypes
@@ -43,10 +44,13 @@ def get_df_name(df):
     return name
 
 
-if(len(sys.argv) != 2):
-	print("Enter total rows as command line argument, exiting")
+if(len(sys.argv) < 2):
+	print("Enter total rows and directory name as command line argument, exiting")
   sys.exit()	
 row_size = int(sys.argv[1])
+
+if(len(argv)==3):
+	dir = argv[2] + "/"
 
 column_names = {}    
 column_names["account_df"] = ["account_id","account_district_id","statement_freq","date"] 
@@ -72,6 +76,8 @@ loan_df = loan_df.astype({"monthly_loan_payment":float})
 order_df = order_df.astype({"order_amount":float})
 trans_df = trans_df.astype({"trans_amount":float, "balance_after_trans":float,"trans_account_partner":float})
 
+if(dir != ""):
+	os.mkdir(dir,0o666)
 write_to_file(card_df)
 write_to_file(client_df)
 write_to_file(account_df)
