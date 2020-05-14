@@ -62,7 +62,7 @@ This program implements a subset of SQL's Data Query Language. Data Definition a
    * FULL OUTER JOIN
 7. **USE**
 8. **LIMIT**
-## Use
+## Uses
 *   USE
 
       * USE database;
@@ -101,7 +101,14 @@ This program implements a subset of SQL's Data Query Language. Data Definition a
      * SELECT columns FROM table1 as t1 LEFT OUTER JOIN table2 AS t2 ON t1.col2 == t2.col2 RIGHT OUTER JOIN table3 AS t3 on t1.somecol == t3.somecol;
 * LIMIT
     * SELECT columns FROM tables WHERE expr LIMIT n;
-     
+### Some Expressions
+
+> column1 < column2
+> (-column1) > -150
+> column1 > 5 AND (column2 != 5)
+> (column1 + column2) == 110
+> col >= (select avg(col) from table)
+
 ### Grammar for expressions
 **expr**:
 
