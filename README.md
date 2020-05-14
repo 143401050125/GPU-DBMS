@@ -185,3 +185,5 @@ String,date time,bool and blob may also be supported later alongwith group by cl
 
 ## Authors
 Adarsh Singh and Rishabh Thakur
+
+* https://github.com/trrishabh/GPU-DBMS
