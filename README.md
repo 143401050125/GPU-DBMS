@@ -102,13 +102,17 @@ This program implements a subset of SQL's Data Query Language. Data Definition a
 * LIMIT
     * SELECT columns FROM tables WHERE expr LIMIT n;
 ### Some Expressions
+```
+ column1 < column2
 
-> column1 < column2
-> (-column1) > -150
-> column1 > 5 AND (column2 != 5)
-> (column1 + column2) == 110
-> col >= (select avg(col) from table)
+ (-column1) > -150
 
+ column1 > 5 AND (column2 != 5)
+
+ (column1 + column2) == 11
+
+  col >= (select avg(col) from table)
+```
 ### Grammar for expressions
 **expr**:
 
