@@ -170,7 +170,7 @@ The program is implemented in CUDA C++. For parsing the input we have used Lex a
 The project mainly focuses on optimizing the operations(like sorting, reducing ) in parallel using GPU and not on the data retrieval part, though the current schema is choosen to give significant speed up in data retrieval from disk.
 
 ## Future Work
-String and blob may also be supported later alongwith group by clause. The scope of the project could be fully realised if Data manipulation and Data definition are also supported. 
+String,date time and blob may also be supported later alongwith group by clause. Data manipulation and Data definition can also supported. Query optimization will provide a significant boost to the execution time. 
 
 ## Authors
 Adarsh Singh and Rishabh Thakur
