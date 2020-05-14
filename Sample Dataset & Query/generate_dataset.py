@@ -64,14 +64,14 @@ column_names["order_df"] = ["order_id","account_id","order_bank_to","order_accou
 column_names["client_df"] = ["client_id","district_id","client_age","client_gender"]
 column_names["trans_df"] = ["trans_id","account_id","date","trans_amount","balance_after_trans","trans_bank_partner","trans_account_partner","trans_type","trans_operation","trans_k_symbol"]   
 
-card_df = pd.DataFrame(np.random.randint(0,row_size,size=(row_size, len(column_names["card_df"]))), columns = column_names["card_df"])
-account_df = pd.DataFrame(np.random.randint(0,row_size,size=(row_size, len(column_names["account_df"]))), columns = column_names["account_df"])
-disp_df = pd.DataFrame(np.random.randint(0,row_size,size=(row_size, len(column_names["disp_df"]))), columns = column_names["disp_df"])
-district_df = pd.DataFrame(np.random.randint(0,row_size,size=(row_size, len(column_names["district_df"]))), columns = column_names["district_df"])
-loan_df = pd.DataFrame(np.random.randint(0,row_size,size=(row_size, len(column_names["loan_df"]))), columns = column_names["loan_df"])
-order_df = pd.DataFrame(np.random.randint(0,row_size,size=(row_size, len(column_names["order_df"]))), columns = column_names["order_df"])
-client_df = pd.DataFrame(np.random.randint(0,row_size,size=(row_size, len(column_names["client_df"]))), columns = column_names["client_df"])
-trans_df = pd.DataFrame(np.random.randint(0,row_size,size=(row_size, len(column_names["trans_df"]))), columns = column_names["trans_df"])
+card_df = pd.DataFrame(np.random.randint(0,row_size,size=(np.random.randint(0,row_size), len(column_names["card_df"]))), columns = column_names["card_df"])
+account_df = pd.DataFrame(np.random.randint(0,row_size,size=(np.random.randint(0,row_size)+1, len(column_names["account_df"]))), columns = column_names["account_df"])
+disp_df = pd.DataFrame(np.random.randint(0,row_size,size=(np.random.randint(0,row_size)+9, len(column_names["disp_df"]))), columns = column_names["disp_df"])
+district_df = pd.DataFrame(np.random.randint(0,row_size,size=(np.random.randint(0,row_size)+5, len(column_names["district_df"]))), columns = column_names["district_df"])
+loan_df = pd.DataFrame(np.random.randint(0,row_size,size=(np.random.randint(0,row_size)+2, len(column_names["loan_df"]))), columns = column_names["loan_df"])
+order_df = pd.DataFrame(np.random.randint(0,row_size,size=(np.random.randint(0,row_size)+3, len(column_names["order_df"]))), columns = column_names["order_df"])
+client_df = pd.DataFrame(np.random.randint(0,row_size,size=(np.random.randint(0,row_size), len(column_names["client_df"]))), columns = column_names["client_df"])
+trans_df = pd.DataFrame(np.random.randint(0,row_size,size=(np.random.randint(0,row_size), len(column_names["trans_df"]))), columns = column_names["trans_df"])
 
 district_df = district_df.astype({"ratio_urban" :float,"unemp_rate95": float,"unemp_rate96": float})
 loan_df = loan_df.astype({"monthly_loan_payment":float})
