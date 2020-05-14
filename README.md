@@ -62,7 +62,7 @@ This program implements a subset of SQL's Data Query Language. Data Definition a
    * FULL OUTER JOIN
 7. **USE**
 8. **LIMIT**
-## Uses
+## Usages
 *   USE
 
       * USE database;
@@ -171,8 +171,8 @@ This program implements a subset of SQL's Data Query Language. Data Definition a
 ## Test on Sample Data
 ```bash
 $ make
-$ python3 generate_dataset.py 500 ../sample
-$ ./a.out < Query
+$ python3 "Sample Dataset and Query/generate_dataset.py" 500 sample
+$ ./a.out < "Sample Dataset and Query/Query"
 ```
 
 ## How it works
@@ -181,7 +181,7 @@ The program is implemented in CUDA C++. For parsing the input we have used Lex a
 The project mainly focuses on optimizing the operations(like sorting, reducing ) in parallel using GPU and not on the data retrieval part, though the current schema is choosen to give significant speed up in data retrieval from disk.
 
 ## Future Work
-String,date time and blob may also be supported later alongwith group by clause. Data manipulation and Data definition can also supported. Query optimization will provide a significant boost to the execution time. 
+String,date time,bool and blob may also be supported later alongwith group by clause. Data manipulation and Data definition can also supported. Query optimization will provide a significant boost to the execution time. 
 
 ## Authors
 Adarsh Singh and Rishabh Thakur
