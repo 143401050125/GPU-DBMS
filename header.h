@@ -6,11 +6,11 @@
 #include <unordered_map>
 #include <setjmp.h>
 #include <utility>
-#include <thrust/extrema.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 
 #include <cuda.h>
-#include <sys/stat.h>
+#include <thrust/extrema.h>
 #include <thrust/iterator/counting_iterator.h>
 #include <thrust/iterator/transform_iterator.h>
 #include <thrust/iterator/permutation_iterator.h>
@@ -29,45 +29,7 @@
 #include "template.h"
 
 #define INT_FLAG -2147483648
-#define FLOAT_FLAG 1.17549e-38
-
-//----------------------- program global variables and function declaration-----------------------------
-
-//variables to capture time taken by a query
-extern cudaEvent_t start, stop;
-extern float et;
-
-//jmup buffer : jump to ignore the current query when some error has occurred
-extern jmp_buf env_buffer;
-
-//path of current database
-extern std::string dbpath;
-
-//count for temporary table
-extern int tmp_table;
-
-//true if we want to print tables in the output
-extern bool print_tables;
-
-//flag to start storing temporary table into files
-extern int tmp_table_limit;
-
-//------------------------------------lex yacc extern variables and functions-----------------------------------------
-
-extern char* yytext;
-
-//called when some error has occurred completly ignores the current executing query and jump to next query  
-void yyerror(std::string);
-
-//lex function to take input to do the lexing
-int yylex(void);
-
-typedef struct yy_buffer_state * YY_BUFFER_STATE;
-extern YY_BUFFER_STATE yy_scan_string(const char * str); // it does not work.
-extern YY_BUFFER_STATE yy_scan_buffer(char *, size_t);
-extern void yy_delete_buffer(YY_BUFFER_STATE buffer);
-extern void yy_switch_to_buffer(YY_BUFFER_STATE buffer);
-#define YYSTYPE struct node *
+#define FLOAT_FLAG -INFINITY
 
 
 //------------------------------------structures and class -------------------------------------------------------------
@@ -186,7 +148,7 @@ class table
     void set_column(std::string colname,column &col);
 
     //prints the table
-    void print(int row_limit = -1);
+    void print(std::vector<std::string> &col_order,int row_limit = -1);
 
     //number of loaded column in the table
     int size();
@@ -227,6 +189,52 @@ class table
     //clear all the vector assigned to columns of the table
     void clear();
 };
+
+//------------------------------------lex yacc extern variables and functions-----------------------------------------
+
+extern char* yytext;
+
+//called when some error has occurred completly ignores the current executing query and jump to next query  
+void yyerror(std::string);
+
+//lex function to take input to do the lexing
+int yylex(void);
+
+typedef struct yy_buffer_state * YY_BUFFER_STATE;
+extern YY_BUFFER_STATE yy_scan_string(const char * str); // it does not work.
+extern YY_BUFFER_STATE yy_scan_buffer(char *, size_t);
+extern void yy_delete_buffer(YY_BUFFER_STATE buffer);
+extern void yy_switch_to_buffer(YY_BUFFER_STATE buffer);
+#define YYSTYPE struct node *
+
+//--------------------------------- program global variables -----------------------------------------
+
+//variables to capture time taken by a query
+extern cudaEvent_t start, stop;
+extern float et;
+
+//jmup buffer : jump to ignore the current query when some error has occurred
+extern jmp_buf env_buffer;
+
+//path of current database
+extern std::string dbpath;
+
+//count for temporary table
+extern int tmp_table;
+
+//true if we want to print tables in the output
+extern bool print_tables;
+
+//flag to start storing temporary table into files
+extern int tmp_table_limit;
+
+//stores pointer to all tables during processing the query
+extern std::set<table *> all_table;
+
+//--------------------------------------------------- function declaration -------------------------------------------------------
+
+//find the order of the columns to be printed in the query
+void get_column_order(node *root,std::vector<std::string> &vec);
 
 //create a AST node with given parameters 
 node * makenode(std::string id,std::string name, node *c1 = NULL, node *c2 = NULL, node *c3 = NULL, node *c4 = NULL, node *c5 = NULL, node *c6 = NULL, node *c7 = NULL, node *c8 = NULL, node *c9 = NULL, node *c10 = NULL );

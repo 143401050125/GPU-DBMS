@@ -6,7 +6,7 @@ int main()
 	dbpath = "";
 	tmp_table = 0; //assuming tmp table path is dbpath + "/tmp/table_" + tmp_table;
 	print_tables = true;
-	tmp_table_limit = 100;
+	tmp_table_limit = 1000000;
 	do 
 	{
 		setjmp(env_buffer);

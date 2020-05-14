@@ -14,11 +14,20 @@
 program:
 	cmd limit ';'
 	{
-		table t;
-		if($2->size == 0)
-			eval($1,t).print();
-		else
-			eval($1,t).print(atoi($2->child[1]->name->c_str()));
+		table &t = *(new table);
+		table &t1 = eval($1,t);
+		if($1->size > 3)
+		{
+			std::vector<std::string> col_order;
+			get_column_order($1->child[1],col_order);
+			if($2->size == 0)
+				t1.print(col_order);
+			else
+				t1.print(col_order,atoi($2->child[1]->name->c_str()));
+		}
+		for(auto t:all_table)
+			t->clear();
+		all_table.clear();
 	};
 
 limit:
@@ -32,6 +41,7 @@ limit:
 	{
 		$$ = makenode("limit","limit");
 	};
+
 cmd:
 	SELECT columns FROM tables WHERE expr ORDER_BY sort_info
 	{
@@ -221,19 +231,13 @@ expr:
 	}
 |	'-' Pexpr
 	{
-		$1 = makenode("!","!");
+		$1 = makenode("-","-");
 		std::string name = *($1->name) + " " + *($2->name);
 		$$ = makenode("expr",name,$1,$2);
 	}
 |	'+' Pexpr
 	{
-		$1 = makenode("!","!");
-		std::string name = *($1->name) + " " + *($2->name);
-		$$ = makenode("expr",name,$1,$2);
-	}
-|	'*' Pexpr
-	{
-		$1 = makenode("!","!");
+		$1 = makenode("+","+");
 		std::string name = *($1->name) + " " + *($2->name);
 		$$ = makenode("expr",name,$1,$2);
 	}

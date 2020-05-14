@@ -1,5 +1,24 @@
 #include "header.h"
 
+void get_column_order(node *root,std::vector<std::string> &vec)
+{
+	if(*root->id != "columns")
+		yyerror("Could not get order of the columns");
+	if(root->size == 3)
+	{
+		if(*root->child[2]->name == "*")
+		{
+			vec.clear();
+			return;
+		}
+		get_column_order(root->child[0],vec);
+		vec.push_back(*root->child[2]->name);
+	}else if(*root->name != "*")
+		vec.push_back(*root->name);
+	else
+		vec.clear();
+}
+
 node * makenode(std::string id,std::string name, node *c1 , node *c2 , node *c3 , node *c4 , node *c5 , node *c6 , node *c7 , node *c8 , node *c9 , node *c10)
 {
   node * nn = new node;
@@ -242,11 +261,11 @@ void unary_op(table & t1, std::string &op)
 		else if (op == "-")
 			thrust::transform(key1.begin(),key1.end(),key1.begin(),thrust::negate<float>());
 		else if(op != "+")
-			yyerror("Undefined Unary Operation");
+			yyerror("'" + op + "' : Undefined Unary Operation");
 
 		if(op == "!")
 			thrust::transform(is_null.begin(),is_null.end(),key1.begin(),key1.begin(),[=] __device__ __host__  (bool &b,float &f) { return (b==false) ? 0 : f;});
-		else
+		else if(op == "-")
 			thrust::transform(is_null.begin(),is_null.end(),key1.begin(),key1.begin(),[=] __device__ __host__  (bool &b,float &f) { return (b==false) ? FLOAT_FLAG : f;});
 	}else
 	{
@@ -257,11 +276,11 @@ void unary_op(table & t1, std::string &op)
 		else if (op == "-")
 			thrust::transform(key1.begin(),key1.end(),key1.begin(),thrust::negate<int>());
 		else if(op != "+")
-			yyerror("Undefined Unary Operation");
+			yyerror("'" + op + "' : Undefined Unary Operation");
 		
 		if(op == "!")
 			thrust::transform(is_null.begin(),is_null.end(),key1.begin(),key1.begin(),[=] __device__ __host__  (bool &b,int &i) { return (b==false) ? 0 : i;});
-		else
+		else if(op == "-")
 			thrust::transform(is_null.begin(),is_null.end(),key1.begin(),key1.begin(),[=] __device__ __host__  (bool &b,int &i) { return (b==false) ? INT_FLAG : i;});
 	}
 	is_null.clear();
@@ -845,44 +864,7 @@ void make_sorted(table &t2, std::string col_order, bool col_present, bool is_des
 	if(!col_present)
 		t2.erase_column(col_order);
 }
-/*
-void validate_columns(table &t3)
-{
-	assert(t3.size() == t3.columnNames.size());
-	for(auto c:t3.columnNames)
-	{
-		column &col = t3.get_column(c);
-		if(col.type)
-		{
-			if(col.f.size() != t3.row_count)
-				if(col.f.size() == 1)
-					col.f.resize(t3.row_count,col.f[0]);
-				else
-					yyerror("Invalid Column elements.");
-		}else
-		{
-			if(col.i.size() != t3.row_count)
-				if(col.i.size() == 1)
-					col.i.resize(t3.row_count,col.i[0]);
-				else
-					yyerror("Invalid Column elements.");
-		}
-	}
-}
 
-bool check_keys(table &t)
-{
-	if(t.size() != 1)
-		yyerror("Invalid keys.");
-	column &col = t.get_first_column();
-	int count = t.row_count;
-	if(col.type)
-		count -= thrust::count_if(col.f.begin(),col.f.end(),thrust::logical_not<float>());
-	else	
-		count -= thrust::count_if(col.i.begin(),col.i.end(),thrust::logical_not<int>());
-	return (count != 0);
-}
-*/
 table &eval(node *root,table &t)
 {
 	std::string &name = *(root->name);
@@ -950,7 +932,6 @@ table &eval(node *root,table &t)
 			if(*(root->child[4]->id) == "ORDER_BY")
 			{
 				table &t2 = eval(root->child[1],t1);
-				//validate_columns(t2);
 				std::string col_order = t2.get_column_name(*(root->child[5]->child[0]->name));
 				bool col_present = true;
 				if(t2.columnNames.find(col_order) == t2.columnNames.end())
@@ -976,11 +957,6 @@ table &eval(node *root,table &t)
 				if(t1.row_count == 0)
 					return t1;
 				table &t3 = eval(root->child[1],t1);
-				//validate_columns(t3);
-				
-				//use t2 as key to select rows from table t3
-
-				//apply_result(t3,t2);
 				return t3;
 			}
 		}else
@@ -1027,7 +1003,7 @@ table &eval(node *root,table &t)
 		}else if(root->size == 2)
 		{
 			table &t1 = eval(root->child[1],t);
-			unary_op(t1,*(root->child[1]->id));
+			unary_op(t1,*(root->child[0]->id));
 			t1.move_column(t1.get_first_column_name(),name);
 			return t1;
 		}else

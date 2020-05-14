@@ -18,7 +18,7 @@ clean:
 	rm -rf CS16B032_CS16B047/*
 
 git-login:
-	git clone https://$(Username):$(Password)@github.com/trrishabh/GPU_Database.git
+	git clone https://$(Username):$(Password)@github.com/trrishabh/GPU-DBMS.git
 
 git-commit:
 	git branch
@@ -26,7 +26,7 @@ git-commit:
 	git add .
 	git config --global user.email "adarshsinghiitm@gmail.com"
 	git config --global user.name "adarsh1783"
-	git commit -m 'asasaas'
+	git commit -m 'final update'
 
 git-push:
 	git push origin master

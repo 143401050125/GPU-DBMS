@@ -7,6 +7,7 @@ std::string dbpath;
 int tmp_table;
 bool print_tables;
 int tmp_table_limit;
+std::set<table *> all_table;
 
 column::column()
 {
@@ -14,10 +15,9 @@ column::column()
   tname = "";
 }
 
-
-
 table::table(std::string nn)
 {
+  all_table.insert(this);
   name = nn;
   original_name = nn;
   flag = false;
@@ -167,7 +167,7 @@ void table::set_column(std::string colname,column &col)
   columnNames.insert(colname);
 }
 
-void table::print(int row_limit)
+void table::print(std::vector<std::string> &col_order,int row_limit)
 {
   std::cout<<std::endl;
   class col{
@@ -178,6 +178,13 @@ void table::print(int row_limit)
   };
   std::unordered_map<std::string,col>::iterator it;
   std::unordered_map<std::string,col> umap;
+ 
+  if(col_order.size() == 0)
+  {
+    for(auto cname:columnNames)
+      col_order.push_back(cname);
+  }
+ 
   for(auto &p: this->umap)
   {
     umap[p.first].type = p.second.type;
@@ -199,13 +206,9 @@ void table::print(int row_limit)
     return;
   }
   
-  it = umap.begin();
   TextTable t( '-', '|', '+' );
-  while(it != umap.end())
-  {
-    t.add(it->first);
-    it++;
-  }
+  for(auto cname : col_order)
+    t.add(cname);
   t.endOfRow();
   int row_max = tot_row;
   if(row_limit != -1 && row_limit < row_max)
@@ -214,14 +217,13 @@ void table::print(int row_limit)
   {
     for(int cur_row = 0; cur_row < row_max; cur_row++)
     {	
-      it = umap.begin();
-      while(it != umap.end())
+      for(auto cname:col_order)
       {
-        if((it->second).type)
-          t.add( ((it->second).f[cur_row] != FLOAT_FLAG) ? std::to_string((it->second).f[cur_row]) : "NULL");
+        col &c = umap[this->get_column_name(cname)];
+        if(c.type)
+          t.add( (c.f[cur_row] != FLOAT_FLAG) ? std::to_string(c.f[cur_row]) : "NULL");
         else
-          t.add( ((it->second).i[cur_row] != INT_FLAG) ? std::to_string((it->second).i[cur_row]) : "NULL");
-        it++;
+          t.add( (c.i[cur_row] != INT_FLAG) ? std::to_string(c.i[cur_row]) : "NULL");
       }
       t.endOfRow();
     }
