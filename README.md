@@ -111,7 +111,7 @@ This program implements a subset of SQL's Data Query Language. Data Definition a
 
  (column1 + column2) == 11
 
-  col >= (select avg(col) from table)
+ col >= (select avg(col) from table)
 ```
 ### Grammar for expressions
 **expr**:
